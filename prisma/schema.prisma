@@ -1,0 +1,26 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Player {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  coins     Int      @default(0)
+  bestScore Int      @default(0)
+  createdAt DateTime @default(now())
+  scores    Score[]
+}
+
+model Score {
+  id        Int      @id @default(autoincrement())
+  playerId  Int
+  player    Player   @relation(fields: [playerId], references: [id])
+  score     Int
+  createdAt DateTime @default(now())
+}
