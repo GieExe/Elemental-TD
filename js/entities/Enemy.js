@@ -13,7 +13,7 @@ class Enemy {
         this.reachedEnd = false;
         
         this.slowEffect = 1; // Speed multiplier for slow effects
-        this.slowEndTime = 0;
+        this.slowEndTime = 0; // Game time when slow effect ends
         
         // Start at first waypoint
         const startPos = this.scene.pathCoords[0];
@@ -122,14 +122,14 @@ class Enemy {
         }
     }
     
-    takeDamage(damage, slowEffect = 0, slowDuration = 0) {
+    takeDamage(damage, slowEffect = 0, slowDuration = 0, currentTime = 0) {
         this.health -= damage;
         
         // Apply slow effect
         if (slowEffect > 0) {
             this.slowEffect = slowEffect;
             this.speed = this.baseSpeed * slowEffect;
-            this.slowEndTime = Date.now() + slowDuration;
+            this.slowEndTime = currentTime + slowDuration;
         }
         
         // Damage flash animation
@@ -161,11 +161,9 @@ class Enemy {
         });
         
         // Create explosion effect
-        const particles = [];
         for (let i = 0; i < 8; i++) {
             const angle = (Math.PI * 2 / 8) * i;
             const particle = this.scene.add.circle(this.x, this.y, 4, 0xff0000);
-            particles.push(particle);
             
             this.scene.tweens.add({
                 targets: particle,

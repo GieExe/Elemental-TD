@@ -6,6 +6,7 @@ class Projectile {
         this.target = target;
         this.config = towerConfig;
         this.shouldRemove = false;
+        this.currentTime = 0;
         
         this.speed = this.config.projectileSpeed;
         
@@ -33,6 +34,8 @@ class Projectile {
     
     update(time, delta) {
         if (this.shouldRemove) return;
+        
+        this.currentTime = time;
         
         // Check if target is still valid
         if (!this.target || this.target.isDead) {
@@ -70,7 +73,7 @@ class Projectile {
         // Deal damage
         const slowEffect = this.config.slowEffect || 0;
         const slowDuration = slowEffect > 0 ? 2000 : 0;
-        this.target.takeDamage(this.config.damage, slowEffect, slowDuration);
+        this.target.takeDamage(this.config.damage, slowEffect, slowDuration, this.currentTime);
         
         // Create impact effect
         this.createImpactEffect();
